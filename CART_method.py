@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
@@ -8,6 +9,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn import tree
 from sklearn.neural_network import MLPClassifier
 from sklearn.neural_network import MLPRegressor
+from sklearn.model_selection import cross_val_score
 
 def main():
     df = pd.read_csv("tar2_sinais_vitais_treino_com_label.txt")
@@ -46,15 +48,14 @@ def main():
 
     printMetricsClassification(y_test_classification, predictions_test_classification, y_train_classification, predictions_train_classification)
     printMetricsRegression(rsme_train, rsme_test)
-    
+    np.random.seed(8)
     clf_classification = MLPClassifier(
                                         hidden_layer_sizes=(256,128,64),max_iter=50000, learning_rate_init=0.001).fit(X_train_classification, y_train_classification)
     predictions_train_classification = clf_classification.predict(X_train_classification)
     predictions_test_classification = clf_classification.predict(X_test_classification)
-
+    np.random.seed(8)
     clf_regression = MLPRegressor(
-                                    hidden_layer_sizes=(256,128,64),max_iter=50000, learning_rate_init=0.001, activation="relu").fit(X_train_classification, y_train_classification)
-    clf_regression.fit(X_train, y_train)
+                                    hidden_layer_sizes=(256,128,64),max_iter=50000, learning_rate_init=0.001, activation="relu",tol=0.0001, n_iter_no_change=50).fit(X_train, y_train)
     predictions_train_regression = clf_regression.predict(X_train)
     predictions_test_regression = clf_regression.predict(X_test)
     rsme_train = mean_squared_error(y_train, predictions_train_regression, squared=False)
@@ -62,6 +63,7 @@ def main():
 
     printMetricsClassification(y_test_classification, predictions_test_classification, y_train_classification, predictions_train_classification)
     printMetricsRegression(rsme_train, rsme_test)
+    
 
 def printMetricsRegression(rsme_train, rsme_test):
     print("REGRESSION USING REGRESSION TREE\n")
