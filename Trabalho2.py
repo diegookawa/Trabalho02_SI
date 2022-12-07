@@ -1,5 +1,4 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import train_test_split
@@ -69,8 +68,8 @@ def main():
     rmse_train = mean_squared_error(y_train, predictions_train_regression, squared=False)
     rmse_test = mean_squared_error(y_test, predictions_test_regression, squared=False)
 
-    printMetricsClassification(y_test_classification, predictions_test_classification, y_train_classification, predictions_train_classification)
-    printMetricsRegression(rmse_train, rmse_test)
+    printMetricsClassificationMLP(y_test_classification, predictions_test_classification, y_train_classification, predictions_train_classification)
+    printMetricsRegressionMLP(rmse_train, rmse_test)
     
 
 def printMetricsRegression(rmse_train, rmse_test):
@@ -85,6 +84,28 @@ def printMetricsRegression(rmse_train, rmse_test):
 
 def printMetricsClassification(y_test_classification, predictions_test_classification, y_train_classification, predictions_train_classification):
     print("CLASSIFICATION USING CLASSIFICATION TREE\n")
+    print('*************** Evaluation on Training Data ***************')
+    print(classification_report(y_train_classification, predictions_train_classification, zero_division=0))
+    print(f"Confusion matrix:\n {confusion_matrix(y_train_classification, predictions_train_classification)}")
+    print('--------------------------------------------------------')
+    print("")
+    print('*************** Evaluation on Test Data ***************')
+    print(classification_report(y_test_classification, predictions_test_classification, zero_division=0))
+    print(f"Confusion matrix:\n {confusion_matrix(y_test_classification, predictions_test_classification)}")
+    print('--------------------------------------------------------')
+    
+def printMetricsRegressionMLP(rmse_train, rmse_test):
+    print("REGRESSION USING MLP\n")
+    print('*************** Evaluation on Training Data ***************')
+    print('RMSE: ', rmse_train)
+    print('--------------------------------------------------------')
+    print("")
+    print('*************** Evaluation on Test Data ***************')
+    print('RMSE: ', rmse_test)
+    print('--------------------------------------------------------')
+
+def printMetricsClassificationMLP(y_test_classification, predictions_test_classification, y_train_classification, predictions_train_classification):
+    print("CLASSIFICATION USING MLP\n")
     print('*************** Evaluation on Training Data ***************')
     print(classification_report(y_train_classification, predictions_train_classification, zero_division=0))
     print(f"Confusion matrix:\n {confusion_matrix(y_train_classification, predictions_train_classification)}")
